@@ -1,0 +1,63 @@
+to make a new project: 
+django-admin startporject <projectname>
+
+common commandos:
+python manage.py runserver   # Start development server
+python manage.py migrate     # Apply migrations
+python manage.py createsuperuser  # Create admin user
+
+-Migrations in Django are a way to propagate changes you make to your database 
+schema (like creating tables, 
+adding fields, or deleting models) in a structured and version-controlled manner.
+
+
+ Djungo restAPI framework: simplify the process of converting your Django models into APIs.
+
+ Serializers (=translator, like djngo forms but for APIes) are responsible for 
+ converting complex data types, like Django models or querysets, into JSON (or other formats like XML) and vice versa. 
+ Another task is to validate incoming data. 
+to types:
+1-Serializer Class: Manual and flexible. You define every field explicitly.
+2-ModelSerializer Class: Automatically generates fields based on a Django model, saving time.
+
+Views (ViewSets) (= the controllers or the logic handlers)
+They decide what to do with a request.
+types of ViewSets in DRF:
+ViewSet – Basic, flexible view handling but requires you to define each action.
+ModelViewSet – Provides all default CRUD operations (list, create, retrieve, update, destroy).
+ReadOnlyModelViewSet – Provides only list and retrieve (read-only API).
+
+What is urls.py in Django? (Simple Explanation)
+In Django, urls.py is used to connect a URL (web address) to a function or view.
+This tells Django what to do when a user visits a specific webpage.
+Each URL needs a function in views.py to handle the request.
+
+A Django project is the whole application (like a website).
+A Django app is a modular part of the project (like a "users" app, "blog" app, etc.).
+
+
+Feature	Project                                 urls.py	             App urls.py
+Handles global routing (entry point) ?	         ✅ Yes               ❌ No 
+Includes URLs from apps?	                     ✅ Yes (include())	 ❌ No
+Contains specific API endpoints?                 ❌ No	             ✅ Yes
+Keeps project modular?	                         ✅ Yes	             ✅ Yes
+
+
+🔹 What’s the Difference Between Django Forms and DRF?
+Feature	             Traditional Django Forms	            Django REST Framework (DRF) API
+How Data is Sent	 Form submitted via HTML (POST)	         JSON request (POST)
+Response Type	     Redirects user to a new page	         Returns JSON response
+Use Case	         Web applications (Django templates)	 APIs for React, mobile apps, etc.
+Authentication	     Django’s session-based login	         Token or JWT authentication
+
+
+💡 Most modern applications use Django REST Framework (DRF) because: 
+✅ It works with mobile apps, frontend frameworks (React, Vue, Angular).
+✅ It separates frontend and backend, making development more flexible.
+✅ It supports microservices and third-party integrations (e.g., Stripe, Google OAuth).
+
+
+
+CORS and CSRF;
+
+Cross-Origin Resource Sharing: allow comunication between servers (for ex frontend to/from backend)

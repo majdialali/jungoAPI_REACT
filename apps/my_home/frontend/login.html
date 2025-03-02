@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Helping Hands NGO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-container .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #008080;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container .btn:hover {
+            background: #005f5f;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+
+
+
+async function sentCredentials(event) {
+    event.preventDefault();  // ✅ Prevent page reload
+
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    let infoBox = document.getElementById("infoBox");
+
+    // Get CSRF token from cookie
+    function getCSRFToken() {
+        let name = "csrftoken=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let cookieArray = decodedCookie.split(';');
+        for(let i = 0; i < cookieArray.length; i++) {
+            let cookie = cookieArray[i].trim();
+            if (cookie.indexOf(name) === 0) {
+                return cookie.substring(name.length, cookie.length);
+            }
+        }
+        return "";
+    }
+
+    let csrfToken = getCSRFToken();
+
+    let response = await fetch("http://127.0.0.1:8000/api/login/", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken  // ✅ Send CSRF token
+        },
+        credentials: "include",  // ✅ Ensures cookies are sent
+        body: JSON.stringify({ username, password })
+    });
+
+    let data = await response.json();
+
+    if (response.ok) {
+        window.location.href = data.redirect;  // ✅ Redirect to home page
+    } else {
+        infoBox.innerText = data.error;  // ❌ Show error message
+    }
+}
+    </script>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form onsubmit="sentCredentials(event)" method="POST">
+            <!-- Submit to Django's login system. I t goes and find url in urls.py -->
+
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p id="infoBox"></p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
