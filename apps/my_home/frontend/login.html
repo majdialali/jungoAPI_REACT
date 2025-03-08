@@ -58,19 +58,33 @@
 <body>
     <script>
 
-
+//general function to reada spes cookie...not used now
+function getCookie(name) {
+    let cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.startsWith(name + "=")) {
+            return cookie.split("=")[1];
+        }
+    }
+    return "";
+}
+//let theme = getCookie("theme");
+//console.log("User theme preference:", theme);
 
 async function sentCredentials(event) {
-    event.preventDefault();  // ✅ Prevent page reload
-
+    event.preventDefault();  // ✅ Prevent page reload Basically, it gives you control over what happens when a user interacts with your webpage. 
+    console.log(document.cookie);
+    
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     let infoBox = document.getElementById("infoBox");
 
-    // Get CSRF token from cookie
+    // Get CSRF (Cross-Site Request Forgery) token from cookie...simply Before entering a restricted area, you need to show your ID to prove you belong there. and it prevents unauthorized requests from third-party sites
     function getCSRFToken() {
+        //called inside this func: because They expire or change when the session expires. We fetch the latest CSRF token before every request. This ensures the most up-to-date token is used.
         let name = "csrftoken=";
-        let decodedCookie = decodeURIComponent(document.cookie);
+        let decodedCookie = decodeURIComponent(document.cookie); // document.cookie retrieves all cookies in a single string like: 'name=value; name2=value2; name3=value3' ...decodeURIComponent() converts  symbols(like encoded: %2C	decoded:,) back into readable text.
         let cookieArray = decodedCookie.split(';');
         for(let i = 0; i < cookieArray.length; i++) {
             let cookie = cookieArray[i].trim();
@@ -79,7 +93,7 @@ async function sentCredentials(event) {
             }
         }
         return "";
-    }
+    } //Cookies are small pieces of data stored in the browser and sent with every request...simliar to A stamp on your hand at an amusement park.
 
     let csrfToken = getCSRFToken();
 
@@ -87,9 +101,9 @@ async function sentCredentials(event) {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken  // ✅ Send CSRF token
+            "X-CSRFToken": csrfToken  // ✅ Send CSRF token/session cookie
         },
-        credentials: "include",  // ✅ Ensures cookies are sent
+        credentials: "include",  // ✅ This tells the browser to send session cookies with the request
         body: JSON.stringify({ username, password })
     });
 

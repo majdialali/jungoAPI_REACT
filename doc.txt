@@ -61,3 +61,29 @@ Authentication	     Django’s session-based login	         Token or JWT authent
 CORS and CSRF;
 
 Cross-Origin Resource Sharing: allow comunication between servers (for ex frontend to/from backend)
+
+JWT (JSON Web Token):
+a way to securely transmit information between a client (browser, mobile app) and a server without needing sessions or cookies.
+What is JWT?
+✅ A digitally signed token (like a passport) that proves identity.
+✅ Used for authentication (login/logout).
+✅ Stateless (server doesn’t need to store user sessions).
+✅ Can be used for authorization (deciding what users can access).
+how works:
+1️⃣ User logs in → Credentials (username/password) are sent to the server.
+2️⃣ if user found, Server generates a JWT → Encodes user data into the token (header.payload.signature).
+3️⃣ JWT is sent back → Stored in LocalStorage, SessionStorage, or HttpOnly cookie.
+4️⃣ Frontend manually sends JWT in the Authorization header (Bearer <token>).
+5️⃣ Server verifies JWT without checking a database.
+6️⃣ User logs out → Frontend deletes JWT, but token is still valid until it expires.
+
+✅ Pros:
+
+Faster & scalable (no session storage needed).
+Works with APIs & microservices.
+Easier cross-domain authentication (used in mobile & SPA apps).
+❌ Cons:
+
+If stored in LocalStorage, XSS attacks can steal the token.
+Token revocation is difficult (must wait for expiration or use a blacklist).
+Larger payload (extra metadata in token).

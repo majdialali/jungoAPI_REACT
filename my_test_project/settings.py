@@ -137,7 +137,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',  # ✅ Forces JSON response
+       
     ),
+   
+
+     #"DEFAULT_AUTHENTICATION_CLASSES": (
+    #    "rest_framework_simplejwt.authentication.JWTAuthentication", # ✅ to use jwt
+    #)
 }
 
 # Enables CORS to allow frontend → backend communication.
@@ -162,4 +168,5 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5500",  # ✅ Allow frontend to send POST requests
     "http://localhost:5500",
 ]
+
 
