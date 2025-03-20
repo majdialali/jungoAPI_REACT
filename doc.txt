@@ -87,3 +87,8 @@ Easier cross-domain authentication (used in mobile & SPA apps).
 If stored in LocalStorage, XSS attacks can steal the token.
 Token revocation is difficult (must wait for expiration or use a blacklist).
 Larger payload (extra metadata in token).
+
+A JWT token is like a digital ID card that your server gives to a user when they log in. Instead of keeping track of the user on the server (like session-based auth), the user carries their ID (JWT) and shows it every time they make a request.
+
+communication fronens/backend using jwt:
+The frontend sends the username and password to the backend, which verifies the credentials and returns an access token (for requests) and a refresh token (to get new access tokens). The frontend stores the access token and includes it in the Authorization header when making API requests. The backend verifies the token and responds with the requested data. If the access token expires, the frontend sends the refresh token to the backend, which validates it and issues a new access token, ensuring the user stays logged in without re-entering credentials.

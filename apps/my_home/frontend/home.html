@@ -54,23 +54,41 @@
     </style>
 </head>
 <script>
+    async function refreshToken() {
+        let refresh_token = localStorage.getItem("refresh_token");
 
+        let response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh: refresh_token })
+        });
+    }
     async function checkAuth() {
+        let accessToken = localStorage.getItem("access_token"); // Retrieve token
+
+        if (!accessToken) {
+            window.location.href = "login.html"; // Redirect if no token
+            return;
+        }
+
         let response = await fetch("http://127.0.0.1:8000/api/get_user/", {
             method: "GET",
-            credentials: "include"  // ✅ Ensures session cookies are sent
+            headers: {
+                "Authorization": `Bearer ${accessToken}` // Send JWT token
+            }
         });
 
         if (response.ok) {
             let data = await response.json();
-            alert("welcome")
-            //document.getElementById("infoBox").value = "Welcome, " + data.username + "!";
+            document.getElementById("infoBox").innerText = "Welcome, " + data.username + "!";
         } else {
-            window.location.href = "login.html";  // ❌ Redirect if not logged in
+            window.location.href = "login.html"; // Redirect if unauthorized
         }
     }
 
     window.onload = checkAuth;
+
+
 </script>
 
 <body>

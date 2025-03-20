@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.my_home',
-    'corsheaders'  # Enables CORS to allow frontend → backend communication.
-,'rest_framework'
+    'corsheaders',  # Enables CORS to allow frontend → backend communication.
+  'rest_framework',
+ 'rest_framework_simplejwt',  # ✅ Add JWT authentication
 ]
 
 MIDDLEWARE = [
@@ -141,9 +142,9 @@ REST_FRAMEWORK = {
     ),
    
 
-     #"DEFAULT_AUTHENTICATION_CLASSES": (
-    #    "rest_framework_simplejwt.authentication.JWTAuthentication", # ✅ to use jwt
-    #)
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication", # ✅ to use jwt
+    )
 }
 
 # Enables CORS to allow frontend → backend communication.

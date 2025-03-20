@@ -63,6 +63,8 @@ class RegisterAPIView(APIView):
 
 
 
+    
+
 class GetAllUsersAPIView(APIView):
     """Returns all registered users"""
       
@@ -76,10 +78,13 @@ to add a new user after running the server, open new poweshell and run:
 Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/register/" -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"username": "newuser", "email": "new@example.com", "password": "securepass123"}'
 
 """
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
-@method_decorator(csrf_exempt, name='dispatch')  # ✅ Correct way to apply csrf_exemptclear
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from rest_framework.views import APIView
+#from rest_framework.permissions import IsAuthenticated
+
 class LoginAPIView(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -88,18 +93,25 @@ class LoginAPIView(APIView):
         user = authenticate(request, username=username, password=password)  # ✅ Check user
 
         if user is not None:
-            login(request, user)  # ✅ Log the user in
-            return JsonResponse({"message": "Login successful", "redirect": "home.html"}, status=200)
+            refresh = RefreshToken.for_user(user)  # ✅ Generate JWT token
+           
+            return JsonResponse({
+                "access": str(refresh.access_token),  # ✅ Short-lived token (used for requests)
+                "refresh": str(refresh)  # ✅ Long-lived token (used to get new access tokens)
+            }, status=200)
         else:
             return JsonResponse({"error": "Invalid username or password"}, status=400)
 
 
+from rest_framework.permissions import IsAuthenticated
 
 class GetUserAPIView(APIView):
-    """✅ API to check if the user is logged in"""
+    permission_classes = [IsAuthenticated]  # ✅ Requires JWT authentication
 
     def get(self, request):
-        if request.user.is_authenticated:  # ✅ Django session check
+        if request.user.is_authenticated: 
             return JsonResponse({"username": request.user.username}, status=200)
         else:
-            return JsonResponse({"error": "Unauthorized"}, status=401)  # ❌ User not logged in
+            return JsonResponse({"error": "Unauthorized"}, status=401)
+
+
